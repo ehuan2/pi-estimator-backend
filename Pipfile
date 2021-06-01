@@ -7,6 +7,9 @@ verify_ssl = true
 
 [packages]
 Flask = "==1.1.2"
+gunicorn = "*"
+psycopg2-binary = "*"
+flask-sqlalchemy = "*"
 
 [requires]
 python_version = "3.8"
