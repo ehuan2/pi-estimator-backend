@@ -30,7 +30,7 @@ def getPoints():
 
 @app.route('/points', methods = ["POST"])
 def addToPoints():
-  point = Points(random.random(), random.random())
+  point = Points(2 * random.random() - 1, 2 * random.random() - 1)
   db.session.add(point)
   db.session.commit()
   return "Points added"
@@ -38,11 +38,16 @@ def addToPoints():
 @app.route('/addTenPoints', methods = ["POST"])
 def addTenPoints():
   for _ in range(10):
-    point = Points(random.random(), random.random())
+    point = Points(2 * random.random() - 1, 2 * random.random() - 1)
     db.session.add(point)
   db.session.commit()
   return "Points added"
 
+@app.route('/points', methods = ['DELETE'])
+def deletePoints():
+  pnts = Points.query.delete()
+  db.session.commit()
+  return jsonify({'num':pnts})
 
 @app.route('/pi', methods=["GET"])
 def getPi():
@@ -50,9 +55,12 @@ def getPi():
   total = 0
   insideCircle = 0
   for pnt in points:
-    if pnt.x <= pnt.y:
+    if pnt.x * pnt.x + pnt.y * pnt.y <= 1:
       insideCircle += 1
     total += 1
+
+  if total == 0:
+    return jsonify({"pi": 0})
   ratio = insideCircle / total
   return jsonify({"pi": str(4 * ratio)})
 
